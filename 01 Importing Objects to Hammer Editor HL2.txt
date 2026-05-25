@@ -1,0 +1,71 @@
+Models
+
+LanternEQ
+	Extract data from .s3d file using LanternEQ Extractor (.\lanternExtractor.exe zonename)
+		Look for data under "Exports/zonename/Objects" folder 
+		
+Open VTFEdit
+				Select Tools -> Convert Folder
+					Select the ellipses next to "input folder"
+						Select "Exports/zonename/Objects/Textures"
+						Select "OK"
+					Select the ellipses next to "output folder"
+						Find your Half-Life 2 or Mod folder and "Make New Folder" to look like: "steamapps\common\half-life 2\hl2\materials\models\zonename\zonenamePropTextures"
+						Select your new folder and select "OK"
+						Make sure these are selected: "To VTF": the format is "*.png"; "Create VMT Files"
+						Select "Convert"
+						Wait for the program to finish
+						Go to your "output folder" and select and open each VMT file all at once in "Notepad++"
+						In "Notepad++" Go to "Search" -> "Replace"
+							Find what:  -> Replace with: 							//removing the text, if this is not done textures will glitch in game and you will see your nodraws.
+								Select Replace All in All Opened Documents
+							Find what: "LightmappedGeneric" -> Replace with: "VertexLitGeneric"		//If this is not done, models will only display their wireframe + bounding box in model viewer [do not do this step for zone materials, leave as lightmappedgeneric]
+								Select Replace All in All Opened Documents
+							File -> Save All 
+								-> File -> Close All
+								
+Get Blender and Blender Source Tools
+				Create a folder to save blender imports
+				Create a folder to save blender source tools exports
+				File -> Import -> glTF 2.0
+					Select your model from "Exports/zonename/Objects"
+								Hit Z -> Material preview if you would like to see the textured model
+								Save your blender file in imports if you want to work with it later.
+				In blender, select the model, hit S for scale, then hit number three or four. 		//If this is not done the model will appear knee-high in hammer editor + game
+				In blender scene properties -> Source Engine Export:
+					In "Export Path" select your created blender tools export folder
+					In "Export Format" select SMD
+						Select Export above "Export Path" and select only modelname.smd
+				In your blender source tools exports folder, find and open your modelname.smd
+					Find -> replace and remove the "d_" prefix from all the textures. 				//This has to be done because the texture names need to match the names of the textures converted by VTFEdit.
+						Save your file.
+
+Get Crowbar decompiler/recompiler program.
+				Create a Crowbar compile folder
+				Go to your blender source tools export folder and create a modelname.qc file to match your modelname.smd file.
+				
+					Copy QC template from steam website or follow this template of a rock formation in everfrost peaks, right outside blackburrow:
+								$modelname	"props/everfrost/bbrock5.mdl" 					//change to your model's name
+								$body mybody	"bbrock5"
+								$surfaceprop	rock										// check the tables at Valve's website for the material you are looking for
+																								// https://developer.valvesoftware.com/wiki/Material_surface_properties
+								$cdmaterials	"models\everfrost\EverfrostPropTextures" 	// full path the game searches for is hl2/materials/models/zonename/zonenameProptextures
+								$sequence idle	"bbrock5" 									// no animation wanted, so re-using the reference mesh
+								$collisionmodel	"bbrock5" { $concave } 						// can be omitted if no collision is needed
+				Save QC File
+
+In Crowbar program:
+	In "Set Up Games"  make sure all your game set up paths all lead to your game's compile tools
+		Steam\steamapps\common\half-life 2\bin for example.
+	Select QC input path to your QC and SMD folder
+	Select Output path to your Crowbar compile folder
+		
+	Create a folder where Half-Life 2 or your mod will find the end compiled model 
+		\steamapps\common\half-life 2\hl2\models\props\zonename
+
+Copy your compiled model from Crowbar compile folder to your game's model folder path.
+
+You should now be able to see the model in prop_static + prop_dynamic entities within hammer, and within game.
+If prop_static does not display the model, use prop_dynamic.
+
+End document.
