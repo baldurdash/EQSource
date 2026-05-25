@@ -17,7 +17,7 @@ Open VTFEdit
 						Wait for the program to finish
 						Go to your "output folder" and select and open each VMT file all at once in "Notepad++"
 						In "Notepad++" Go to "Search" -> "Replace"
-							Find what:  -> Replace with: 							//removing the text, if this is not done textures will glitch in game and you will see your nodraws.
+							Find what: 	"$translucent" 1  -> Replace with: 							//removing the text, if this is not done textures will glitch in game and you will see your nodraws.
 								Select Replace All in All Opened Documents
 							Find what: "LightmappedGeneric" -> Replace with: "VertexLitGeneric"		//If this is not done, models will only display their wireframe + bounding box in model viewer [do not do this step for zone materials, leave as lightmappedgeneric]
 								Select Replace All in All Opened Documents
